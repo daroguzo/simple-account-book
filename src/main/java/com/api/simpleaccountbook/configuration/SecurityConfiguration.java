@@ -25,15 +25,18 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
 
         http.csrf().disable();
+        // 동일 도메인 iframe 접근 허용
+        http.headers().frameOptions().sameOrigin();
 
         http.authorizeRequests()
                 .antMatchers(
-                        "/"
+                        "/",
+                        "/api/member/**"
                 ).permitAll();
 
         http.authorizeRequests()
                 .antMatchers(
-                        "/api/user/**"
+                        "/api/account/**"
                 ).hasAuthority("ROLE_USER");
 
         super.configure(http);
