@@ -11,12 +11,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
-
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Service
 public class MemberServiceImpl implements MemberService{
@@ -24,12 +25,13 @@ public class MemberServiceImpl implements MemberService{
     private final MemberRepository memberRepository;
 
 
+    @Transactional
     @Override
-    public boolean register(MemberInput input) {
+    public void register(MemberInput input) {
         Optional<Member> byUsername = memberRepository.findByUsername(input.getUsername());
 
         // 중복된 사용자 이름
-        if (byUsername.isPresent()) { return false; }
+        if (byUsername.isPresent()) { throw new UsernameNotFoundException("이미 등록된 사용자 이름입니다."); }
 
         String encodedPassword = BCrypt.hashpw(input.getPassword(), BCrypt.gensalt());
 
@@ -39,7 +41,6 @@ public class MemberServiceImpl implements MemberService{
                 .build();
         memberRepository.save(newMember);
 
-        return true;
     }
 
     @Override

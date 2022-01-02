@@ -10,6 +10,6 @@ public interface MemberService extends UserDetailsService {
     /**
      * 회원가입
      */
-    boolean register(MemberInput memberInput);
+    void register(MemberInput memberInput);
 
 }

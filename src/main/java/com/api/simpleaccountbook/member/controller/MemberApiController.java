@@ -6,12 +6,10 @@ import com.api.simpleaccountbook.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
@@ -37,8 +35,13 @@ public class MemberApiController {
             return new ResponseEntity<>(responseErrorList, HttpStatus.BAD_REQUEST);
         }
 
-        boolean register = memberService.register(memberInput);
+        memberService.register(memberInput);
 
-        return ResponseEntity.ok().build();
+        return new ResponseEntity<>("사용자가 등록되었습니다.", HttpStatus.OK);
+    }
+
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public ResponseEntity<?> UsernameNotFoundExceptionHandler(UsernameNotFoundException exception) {
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
     }
 }
