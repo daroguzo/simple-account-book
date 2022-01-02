@@ -1,10 +1,12 @@
 package com.api.simpleaccountbook.member.entity;
 
+import com.api.simpleaccountbook.accountbook.entity.AccountBook;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter @Setter @Builder
 @NoArgsConstructor
@@ -18,4 +20,13 @@ public class Member {
     private String username;
 
     private String password;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<AccountBook> accountBooks = new ArrayList<>();
+
+    public void addAccountBook(AccountBook accountBook) {
+        accountBook.setMember(this);
+        this.accountBooks.add(accountBook);
+    }
 }
