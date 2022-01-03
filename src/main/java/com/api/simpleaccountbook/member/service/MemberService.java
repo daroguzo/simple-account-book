@@ -1,7 +1,9 @@
 package com.api.simpleaccountbook.member.service;
 
+import com.api.simpleaccountbook.member.entity.Member;
 import com.api.simpleaccountbook.member.model.MemberInput;
 import com.api.simpleaccountbook.member.model.MemberLogin;
+import com.api.simpleaccountbook.member.model.MemberLoginToken;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +17,7 @@ public interface MemberService extends UserDetailsService {
 
     /**
      * 로그인
+     * @return
      */
-    void login(MemberLogin memberLogin);
-
+    MemberLoginToken login(MemberLogin memberLogin);
 }

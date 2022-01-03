@@ -4,6 +4,7 @@ import com.api.simpleaccountbook.member.exception.PasswordNotMatchException;
 import com.api.simpleaccountbook.member.exception.ResponseError;
 import com.api.simpleaccountbook.member.model.MemberInput;
 import com.api.simpleaccountbook.member.model.MemberLogin;
+import com.api.simpleaccountbook.member.model.MemberLoginToken;
 import com.api.simpleaccountbook.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -42,9 +43,9 @@ public class MemberApiController {
         ResponseEntity<List<ResponseError>> responseErrorList = getErrorResponseEntityList(errors);
         if (responseErrorList != null) return responseErrorList;
 
-        memberService.login(memberLogin);
+        MemberLoginToken token = memberService.login(memberLogin);
 
-        return new ResponseEntity<>("로그인 성공!", HttpStatus.OK);
+        return ResponseEntity.ok().body(token);
     }
 
     // model 안에 에러가 있다면 에러정보 리스트로 반환
