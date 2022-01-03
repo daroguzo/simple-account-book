@@ -19,7 +19,7 @@ public class MemberInput {
     @Email(message = "이메일 형식이 필요합니다.")
     private String email;
 
-    @Size(min = 4, message = "비밀번호는 4자 이상 입력해야 합니다.")
+    @Size(min = 4, max = 20, message = "비밀번호는 4자 이상 20자 안으로 입력해야 합니다.")
     @NotBlank(message = "비밀번호는 필수 항목입니다.")
     private String password;
 }

@@ -17,8 +17,10 @@ public class Member {
     @Id @GeneratedValue
     private Long id;
 
+    @Column(nullable = false, unique = true)
     private String email;
 
+    @Column(nullable = false, length = 20)
     private String password;
 
     @JsonIgnore

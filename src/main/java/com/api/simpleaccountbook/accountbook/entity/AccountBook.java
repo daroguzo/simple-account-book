@@ -19,8 +19,10 @@ public class AccountBook {
     @JoinColumn(name = "member_id")
     private Member member;
 
+    @Column(nullable = false)
     private String subject;
 
+    @Column(nullable = false)
     private int usedMoney;
 
     @Lob
