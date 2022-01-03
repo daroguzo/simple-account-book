@@ -6,8 +6,11 @@ import com.api.simpleaccountbook.member.model.MemberInput;
 import com.api.simpleaccountbook.member.model.MemberLogin;
 import com.api.simpleaccountbook.member.model.MemberLoginToken;
 import com.api.simpleaccountbook.member.service.MemberService;
+import com.auth0.jwt.exceptions.SignatureVerificationException;
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.Errors;
@@ -19,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
-@RequestMapping("/api/member")
+@RequestMapping(value = "/api/member", produces = MediaType.APPLICATION_JSON_VALUE)
 @RestController
 public class MemberApiController {
 
@@ -71,6 +74,18 @@ public class MemberApiController {
     // 비밀번호가 일치하지 않는 경우 예외 처리
     @ExceptionHandler(PasswordNotMatchException.class)
     public ResponseEntity<?> PasswordNotMatchExceptionHandler(PasswordNotMatchException e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    // 토큰이 만료된 경우
+    @ExceptionHandler(TokenExpiredException.class)
+    public ResponseEntity<?> TokenExpiredExceptionHandler(PasswordNotMatchException e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    // 토큰이 잘못된 경우
+    @ExceptionHandler(SignatureVerificationException.class)
+    public ResponseEntity<?> SignatureVerificationExceptionHandler(SignatureVerificationException e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 }

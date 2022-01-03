@@ -23,6 +23,8 @@ public class Member {
     @Column(nullable = false)
     private String password;
 
+    private String role;
+
     @JsonIgnore
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<AccountBook> accountBooks = new ArrayList<>();
