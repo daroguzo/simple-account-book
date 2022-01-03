@@ -23,7 +23,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-
         http.csrf().disable();
         // 동일 도메인 iframe 접근 허용
         http.headers().frameOptions().sameOrigin();
@@ -44,10 +43,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-
         auth.userDetailsService(memberService)
                 .passwordEncoder(getPasswordEncoder());
-
         super.configure(auth);
     }
 }

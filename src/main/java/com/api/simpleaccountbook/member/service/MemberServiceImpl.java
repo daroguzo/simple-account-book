@@ -28,15 +28,15 @@ public class MemberServiceImpl implements MemberService{
     @Transactional
     @Override
     public void register(MemberInput input) {
-        Optional<Member> byUsername = memberRepository.findByUsername(input.getUsername());
+        Optional<Member> byEmail = memberRepository.findByEmail(input.getEmail());
 
-        // 중복된 사용자 이름
-        if (byUsername.isPresent()) { throw new UsernameNotFoundException("이미 등록된 사용자 이름입니다."); }
+        // 중복된 이메일 주소
+        if (byEmail.isPresent()) { throw new UsernameNotFoundException("이미 등록된 이메일입니다."); }
 
         String encodedPassword = BCrypt.hashpw(input.getPassword(), BCrypt.gensalt());
 
         Member newMember = Member.builder()
-                .username(input.getUsername())
+                .email(input.getEmail())
                 .password(encodedPassword)
                 .build();
         memberRepository.save(newMember);
@@ -44,15 +44,15 @@ public class MemberServiceImpl implements MemberService{
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
-        Optional<Member> byUsername = memberRepository.findByUsername(username);
-        Member member = byUsername.orElseThrow(() -> new UsernameNotFoundException("일치하는 사용자가 없습니다."));
+        Optional<Member> byUsername = memberRepository.findByEmail(email);
+        Member member = byUsername.orElseThrow(() -> new UsernameNotFoundException("일치하는 이메일이 없습니다."));
 
         Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
         grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_USER"));
 
 
-        return new User(member.getUsername(), member.getPassword(), grantedAuthorities);
+        return new User(member.getEmail(), member.getPassword(), grantedAuthorities);
     }
 }

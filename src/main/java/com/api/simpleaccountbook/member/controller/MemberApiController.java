@@ -40,6 +40,7 @@ public class MemberApiController {
         return new ResponseEntity<>("사용자가 등록되었습니다.", HttpStatus.OK);
     }
 
+    // 해당되는 사용자가 없는 경우 예외 처리
     @ExceptionHandler(UsernameNotFoundException.class)
     public ResponseEntity<?> UsernameNotFoundExceptionHandler(UsernameNotFoundException exception) {
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
