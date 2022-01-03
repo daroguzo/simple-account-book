@@ -38,6 +38,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                         "/api/account/**"
                 ).hasAuthority("ROLE_USER");
 
+        http.formLogin().disable();
+
         super.configure(http);
     }
 
