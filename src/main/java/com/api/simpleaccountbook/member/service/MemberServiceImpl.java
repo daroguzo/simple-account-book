@@ -2,6 +2,7 @@ package com.api.simpleaccountbook.member.service;
 
 import com.api.simpleaccountbook.accountbook.util.PasswordUtils;
 import com.api.simpleaccountbook.configuration.MemberPrincipal;
+import com.api.simpleaccountbook.jwt.JwtProperties;
 import com.api.simpleaccountbook.member.entity.Member;
 import com.api.simpleaccountbook.member.exception.PasswordNotMatchException;
 import com.api.simpleaccountbook.member.model.MemberInput;
@@ -61,29 +62,15 @@ public class MemberServiceImpl implements MemberService{
         }
         return createToken(member);
     }
-
-    @Transactional
-    @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-
-        Optional<Member> byEmail = memberRepository.findByEmail(email);
-        Member member = byEmail.orElseThrow(() -> new UsernameNotFoundException("일치하는 이메일이 없습니다."));
-
-        return new MemberPrincipal(member);
-    }
-
     /**
      * 로그인 token 생성
      */
     private MemberLoginToken createToken(Member member) {
-        // 1일 뒤 토근 만료
-        LocalDateTime expiredDateTime = LocalDateTime.now().plusDays(1);
-        Date expiredDate = Timestamp.valueOf(expiredDateTime);
 
         String token = JWT.create()
-                .withExpiresAt(expiredDate)
                 .withSubject(member.getEmail())
-                .sign(Algorithm.HMAC512("jinoo".getBytes()));
+                .withExpiresAt(new Date(System.currentTimeMillis() + JwtProperties.ACCESS_TOKEN_EXPIRATION_TIME))
+                .sign(Algorithm.HMAC512(JwtProperties.SECRET.getBytes()));
 
         return MemberLoginToken.builder()
                 .message("로그인에 성공하였습니다.")

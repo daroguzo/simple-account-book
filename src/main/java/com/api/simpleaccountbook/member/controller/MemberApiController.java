@@ -22,7 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
-@RequestMapping(value = "/api/member", produces = MediaType.APPLICATION_JSON_VALUE)
+//@RequestMapping(value = "/api/member", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 @RestController
 public class MemberApiController {
 
