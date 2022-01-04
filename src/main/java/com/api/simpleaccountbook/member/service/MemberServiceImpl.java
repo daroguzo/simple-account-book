@@ -73,8 +73,7 @@ public class MemberServiceImpl implements MemberService{
                 .sign(Algorithm.HMAC512(JwtProperties.SECRET.getBytes()));
 
         return MemberLoginToken.builder()
-                .message("로그인에 성공하였습니다.")
-                .token(token)
+                .accessToken(token)
                 .build();
     }
 }
