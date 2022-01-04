@@ -28,13 +28,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Bean
     PasswordEncoder getPasswordEncoder() { return new BCryptPasswordEncoder(); }
 
-    @Bean
-    DaoAuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
-        daoAuthenticationProvider.setPasswordEncoder(getPasswordEncoder());
-        daoAuthenticationProvider.setUserDetailsService(memberPrincipalDetailsService);
-        return daoAuthenticationProvider;
-    }
+//    @Bean
+//    DaoAuthenticationProvider authenticationProvider() {
+//        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
+//        daoAuthenticationProvider.setPasswordEncoder(getPasswordEncoder());
+//        daoAuthenticationProvider.setUserDetailsService(memberPrincipalDetailsService);
+//        return daoAuthenticationProvider;
+//    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -55,9 +55,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                     .antMatchers(
                             "/",
-                            "/api/member/**",
-                            "/login",
-                            "/register"
+                            "/api/member/**"
                     ).permitAll()
                     .and()
                 .authorizeRequests()
