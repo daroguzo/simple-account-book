@@ -1,22 +1,22 @@
 package com.api.simpleaccountbook.accountbook.service;
 
 import com.api.simpleaccountbook.accountbook.model.AccountBookInput;
-import com.api.simpleaccountbook.accountbook.model.AccountBookResponse;
+import com.api.simpleaccountbook.accountbook.model.AccountBookDetailResponse;
+import com.api.simpleaccountbook.accountbook.model.AccountBookSimpleResponse;
 import com.api.simpleaccountbook.accountbook.model.ModifyAccountBookInput;
-import com.api.simpleaccountbook.member.entity.Member;
 
 import java.util.List;
 
 public interface AccountBookService {
     /**
-     * 해당 유저의 가계부 목록 가져오기
+     * 해당 유저의 간단한 가계부 목록 가져오기
      */
-    List<AccountBookResponse> getAccountBookList(String email);
+    List<AccountBookSimpleResponse> getAccountBookList(String email);
 
     /**
-     * 해당 유저의 삭제된 가계부 목록 가져오기
+     * 해당 유저의 간단한 삭제된 가계부 목록 가져오기
      */
-    List<AccountBookResponse> getDeletedAccountBookList(String email);
+    List<AccountBookSimpleResponse> getDeletedAccountBookList(String email);
 
     /**
      * 가계부 등록
@@ -24,22 +24,22 @@ public interface AccountBookService {
     void postAccountBook(AccountBookInput accountBookInput, String email);
 
     /**
-     * 해당 가계부 가져오기
+     * 해당 가계부 상세정보 가져오기
      */
-    AccountBookResponse getAccountBook(Long accountBookId);
+    AccountBookDetailResponse getDetailAccountBook(Long accountBookId, String email);
 
     /**
      * 해당 가계부 삭제
      */
-    boolean deleteAccountBook(Long accountBookId);
+    boolean deleteAccountBook(Long accountBookId, String email);
 
     /**
      * 삭제된 가계부 복구
      */
-    boolean restoreAccountBook(Long accountBookId);
+    boolean restoreAccountBook(Long accountBookId, String email);
 
     /**
      * 해당 가계부 수정
      */
-    void modifyAccountBook(ModifyAccountBookInput modifyAccountBookInput);
+    void modifyAccountBook(ModifyAccountBookInput modifyAccountBookInput, String email);
 }

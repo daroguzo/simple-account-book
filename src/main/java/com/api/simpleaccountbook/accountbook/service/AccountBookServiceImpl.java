@@ -1,8 +1,11 @@
 package com.api.simpleaccountbook.accountbook.service;
 
 import com.api.simpleaccountbook.accountbook.entity.AccountBook;
+import com.api.simpleaccountbook.accountbook.exception.AccountBookNotFoundException;
+import com.api.simpleaccountbook.accountbook.exception.UnAuthorizedAccountBookException;
 import com.api.simpleaccountbook.accountbook.model.AccountBookInput;
-import com.api.simpleaccountbook.accountbook.model.AccountBookResponse;
+import com.api.simpleaccountbook.accountbook.model.AccountBookDetailResponse;
+import com.api.simpleaccountbook.accountbook.model.AccountBookSimpleResponse;
 import com.api.simpleaccountbook.accountbook.model.ModifyAccountBookInput;
 import com.api.simpleaccountbook.accountbook.repository.AccountBookRepository;
 import com.api.simpleaccountbook.member.entity.Member;
@@ -26,36 +29,34 @@ public class AccountBookServiceImpl implements AccountBookService{
     private final MemberRepository memberRepository;
 
     @Override
-    public List<AccountBookResponse> getAccountBookList(String email) {
+    public List<AccountBookSimpleResponse> getAccountBookList(String email) {
         Member member = getMember(email);
 
         List<AccountBook> byMember = accountBookRepository.findByMember(member);
-        List<AccountBookResponse> list = new ArrayList<>();
+        List<AccountBookSimpleResponse> list = new ArrayList<>();
 
         byMember.forEach((e) -> {
             if (!e.isDeleted()) {
-                list.add(AccountBookResponse.of(e));
+                list.add(AccountBookSimpleResponse.of(e));
             }
         });
-
-
         return list;
     }
 
     @Override
-    public List<AccountBookResponse> getDeletedAccountBookList(String email) {
+    public List<AccountBookSimpleResponse> getDeletedAccountBookList(String email) {
         Member member = getMember(email);
 
         List<AccountBook> byMember = accountBookRepository.findByMember(member);
-        List<AccountBookResponse> list = new ArrayList<>();
+        List<AccountBookSimpleResponse> deletedList = new ArrayList<>();
 
         byMember.forEach((e) -> {
             if (e.isDeleted()) {
-                list.add(AccountBookResponse.of(e));
+                deletedList.add(AccountBookSimpleResponse.of(e));
             }
         });
 
-        return list;
+        return deletedList;
     }
 
     @Transactional
@@ -76,25 +77,52 @@ public class AccountBookServiceImpl implements AccountBookService{
     }
 
     @Override
-    public AccountBookResponse getAccountBook(Long accountBookId) {
-        return null;
+    public AccountBookDetailResponse getDetailAccountBook(Long accountBookId, String email) {
+        Member member = getMember(email);
+
+        Optional<AccountBook> byId = accountBookRepository.findById(accountBookId);
+        AccountBook accountBook = byId.orElseThrow(() -> new AccountBookNotFoundException("해당되는 가계부가 없습니다."));
+
+        if (!accountBook.getMember().equals(member)) {
+            throw new UnAuthorizedAccountBookException("자신의 가계부에만 접근할 수 있습니다.");
+        }
+
+        return AccountBookDetailResponse.builder()
+                .id(accountBook.getId())
+                .subject(accountBook.getSubject())
+                .usedMoney(accountBook.getUsedMoney())
+                .memo(accountBook.getMemo())
+                .regDt(accountBook.getRegDt())
+                .build();
     }
 
+    @Transactional
     @Override
-    public boolean deleteAccountBook(Long accountBookId) {
+    public boolean deleteAccountBook(Long accountBookId, String email) {
+        Member member = getMember(email);
+
         return false;
     }
 
+    @Transactional
     @Override
-    public boolean restoreAccountBook(Long accountBookId) {
+    public boolean restoreAccountBook(Long accountBookId, String email) {
+        Member member = getMember(email);
+
         return false;
     }
 
+    @Transactional
     @Override
-    public void modifyAccountBook(ModifyAccountBookInput modifyAccountBookInput) {
+    public void modifyAccountBook(ModifyAccountBookInput modifyAccountBookInput, String email) {
+        Member member = getMember(email);
 
     }
 
+
+    /**
+     * 해당 email 사용자 존재 여부 체크
+     */
     private Member getMember(String email) {
         Optional<Member> byEmail = memberRepository.findByEmail(email);
         return byEmail.orElseThrow(() -> new UsernameNotFoundException("일치하는 이메일이 없습니다."));

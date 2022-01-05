@@ -13,19 +13,16 @@ import java.time.LocalDateTime;
 @Getter @Builder
 public class AccountBookSimpleResponse {
 
-    private int usedMoney;
+    private Long id;
 
     private String subject;
-
-    private String memo;
 
     private LocalDateTime regDt;
 
     public static AccountBookSimpleResponse of(AccountBook accountBook) {
         return AccountBookSimpleResponse.builder()
+                .id(accountBook.getId())
                 .subject(accountBook.getSubject())
-                .usedMoney(accountBook.getUsedMoney())
-                .memo(accountBook.getMemo())
                 .regDt(accountBook.getRegDt())
                 .build();
 

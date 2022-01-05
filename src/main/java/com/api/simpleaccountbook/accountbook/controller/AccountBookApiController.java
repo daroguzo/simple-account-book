@@ -1,9 +1,10 @@
 package com.api.simpleaccountbook.accountbook.controller;
 
+import com.api.simpleaccountbook.accountbook.model.AccountBookDetailResponse;
 import com.api.simpleaccountbook.accountbook.model.AccountBookInput;
-import com.api.simpleaccountbook.accountbook.model.AccountBookResponse;
+import com.api.simpleaccountbook.accountbook.model.AccountBookSimpleResponse;
 import com.api.simpleaccountbook.accountbook.service.AccountBookService;
-import com.api.simpleaccountbook.member.exception.ResponseError;
+import com.api.simpleaccountbook.exception.ResponseError;
 import com.api.simpleaccountbook.response.Message;
 import com.api.simpleaccountbook.response.StateEnum;
 import lombok.RequiredArgsConstructor;
@@ -29,14 +30,13 @@ public class AccountBookApiController {
 
     @GetMapping("/list")
     public ResponseEntity<?> getList() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String principal = (String) authentication.getPrincipal();
-        List<AccountBookResponse> accountBookList = accountBookService.getAccountBookList(principal);
+        String email = getMemberEmail();
+        List<AccountBookSimpleResponse> accountBookList = accountBookService.getAccountBookList(email);
 
         Message message = Message.builder()
                 .statusCode(StateEnum.OK.getStatusCode())
                 .code(StateEnum.OK)
-                .message("가계부 리스트")
+                .message("가계부 목록")
                 .data(accountBookList)
                 .build();
         return new ResponseEntity<>(message, HttpStatus.OK);
@@ -44,15 +44,14 @@ public class AccountBookApiController {
 
     @GetMapping("/deleted-list")
     public ResponseEntity<?> getDeletedList() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String principal = (String) authentication.getPrincipal();
-        List<AccountBookResponse> accountBookList = accountBookService.getDeletedAccountBookList(principal);
+        String email = getMemberEmail();
+        List<AccountBookSimpleResponse> deletedAccountBookList = accountBookService.getDeletedAccountBookList(email);
 
         Message message = Message.builder()
                 .statusCode(StateEnum.OK.getStatusCode())
                 .code(StateEnum.OK)
-                .message("삭제된 가계부 리스트")
-                .data(accountBookList)
+                .message("삭제된 가계부 목록")
+                .data(deletedAccountBookList)
                 .build();
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
@@ -63,22 +62,35 @@ public class AccountBookApiController {
         ResponseEntity<List<ResponseError>> responseErrorList = getErrorResponseEntityList(errors);
         if (responseErrorList != null) return responseErrorList;
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String principal = (String) authentication.getPrincipal();
-        List<AccountBookResponse> accountBookList = accountBookService.getAccountBookList(principal);
-
-        accountBookService.postAccountBook(accountBookInput, principal);
+        String email = getMemberEmail();
+        accountBookService.postAccountBook(accountBookInput, email);
 
         Message message = Message.builder()
                 .statusCode(StateEnum.OK.getStatusCode())
                 .code(StateEnum.OK)
                 .message("새로운 가계부가 등록되었습니다.")
-                .data("")
                 .build();
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
 
-    // model 안에 에러가 있다면 에러정보 리스트로 반환
+    @GetMapping("/detail/{id}")
+    public ResponseEntity<?> getDetail(@PathVariable Long id) {
+
+        String email = getMemberEmail();
+        AccountBookDetailResponse detailAccountBook = accountBookService.getDetailAccountBook(id, email);
+
+        Message message = Message.builder()
+                .statusCode(StateEnum.OK.getStatusCode())
+                .code(StateEnum.OK)
+                .message("가계부 세부 내역")
+                .data(detailAccountBook)
+                .build();
+        return new ResponseEntity<>(message, HttpStatus.OK);
+    }
+
+    /**
+     * model 안에 에러가 있다면 에러정보 리스트로 반환
+      */
     private ResponseEntity<List<ResponseError>> getErrorResponseEntityList(Errors errors) {
         List<ResponseError> responseErrorList = new ArrayList<>();
 
@@ -90,5 +102,13 @@ public class AccountBookApiController {
             return new ResponseEntity<>(responseErrorList, HttpStatus.BAD_REQUEST);
         }
         return null;
+    }
+
+    /**
+     * Authentication 통해 토큰에 저장된 유저 정보 가져오기
+     */
+    private String getMemberEmail() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return (String) authentication.getPrincipal();
     }
 }

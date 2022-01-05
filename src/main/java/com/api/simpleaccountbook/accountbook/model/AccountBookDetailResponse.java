@@ -11,7 +11,9 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter @Builder
-public class AccountBookResponse {
+public class AccountBookDetailResponse {
+
+    private Long id;
 
     private int usedMoney;
 
@@ -21,8 +23,9 @@ public class AccountBookResponse {
 
     private LocalDateTime regDt;
 
-    public static AccountBookResponse of(AccountBook accountBook) {
-        return AccountBookResponse.builder()
+    public static AccountBookDetailResponse of(AccountBook accountBook) {
+        return AccountBookDetailResponse.builder()
+                .id(accountBook.getId())
                 .subject(accountBook.getSubject())
                 .usedMoney(accountBook.getUsedMoney())
                 .memo(accountBook.getMemo())
