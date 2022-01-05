@@ -4,7 +4,7 @@ import com.api.simpleaccountbook.accountbook.model.AccountBookDetailResponse;
 import com.api.simpleaccountbook.accountbook.model.AccountBookInput;
 import com.api.simpleaccountbook.accountbook.model.AccountBookSimpleResponse;
 import com.api.simpleaccountbook.accountbook.service.AccountBookService;
-import com.api.simpleaccountbook.exception.ResponseError;
+import com.api.simpleaccountbook.response.ResponseError;
 import com.api.simpleaccountbook.response.Message;
 import com.api.simpleaccountbook.response.StateEnum;
 import lombok.RequiredArgsConstructor;
@@ -82,10 +82,56 @@ public class AccountBookApiController {
         Message message = Message.builder()
                 .statusCode(StateEnum.OK.getStatusCode())
                 .code(StateEnum.OK)
-                .message("가계부 세부 내역")
+                .message(id + "번 가계부 세부 내역")
                 .data(detailAccountBook)
                 .build();
         return new ResponseEntity<>(message, HttpStatus.OK);
+    }
+
+    @PutMapping("/delete/{id}")
+    public ResponseEntity<?> deleteAccountBook(@PathVariable Long id) {
+
+        String email = getMemberEmail();
+        Message message;
+
+        if (accountBookService.deleteAccountBook(id, email)) {
+            message = Message.builder()
+                    .statusCode(StateEnum.OK.getStatusCode())
+                    .code(StateEnum.OK)
+                    .message(id + "번 가계부가 정상적으로 삭제처리 되었습니다.")
+                    .build();
+            return new ResponseEntity<>(message, HttpStatus.OK);
+        }
+
+        message = Message.builder()
+                .statusCode(StateEnum.BAD_REQUEST.getStatusCode())
+                .code(StateEnum.BAD_REQUEST)
+                .message(id + "번 가계부는 이미 삭제처리된 가계부입니다.")
+                .build();
+        return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+    }
+
+    @PutMapping("/restore/{id}")
+    public ResponseEntity<?> restoreAccountBook(@PathVariable Long id) {
+
+        String email = getMemberEmail();
+        Message message;
+
+        if (accountBookService.restoreAccountBook(id, email)) {
+            message = Message.builder()
+                    .statusCode(StateEnum.OK.getStatusCode())
+                    .code(StateEnum.OK)
+                    .message(id + "번 가계부가 정상적으로 복구 되었습니다.")
+                    .build();
+            return new ResponseEntity<>(message, HttpStatus.OK);
+        }
+
+        message = Message.builder()
+                .statusCode(StateEnum.BAD_REQUEST.getStatusCode())
+                .code(StateEnum.BAD_REQUEST)
+                .message(id + "번 가계부는 이미 존재하는 가계부입니다.")
+                .build();
+        return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
     }
 
     /**

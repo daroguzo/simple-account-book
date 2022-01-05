@@ -1,6 +1,6 @@
 package com.api.simpleaccountbook.member.controller;
 
-import com.api.simpleaccountbook.exception.ResponseError;
+import com.api.simpleaccountbook.response.ResponseError;
 import com.api.simpleaccountbook.member.model.MemberInput;
 import com.api.simpleaccountbook.member.model.MemberLogin;
 import com.api.simpleaccountbook.member.model.MemberLoginToken;

@@ -1,4 +1,4 @@
-package com.api.simpleaccountbook.exception;
+package com.api.simpleaccountbook.response;
 
 import lombok.*;
 import org.springframework.validation.FieldError;
