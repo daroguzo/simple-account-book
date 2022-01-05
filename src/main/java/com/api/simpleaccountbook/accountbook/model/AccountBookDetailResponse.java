@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter @Builder
-public class AccountBookResponse {
+public class AccountBookDetailResponse {
 
     private Long id;
 
@@ -23,16 +23,13 @@ public class AccountBookResponse {
 
     private LocalDateTime regDt;
 
-    private boolean isDeleted;
-
-    public static AccountBookResponse of(AccountBook accountBook) {
-        return AccountBookResponse.builder()
+    public static AccountBookDetailResponse of(AccountBook accountBook) {
+        return AccountBookDetailResponse.builder()
                 .id(accountBook.getId())
                 .subject(accountBook.getSubject())
                 .usedMoney(accountBook.getUsedMoney())
                 .memo(accountBook.getMemo())
                 .regDt(accountBook.getRegDt())
-                .isDeleted(accountBook.isDeleted())
                 .build();
 
     }

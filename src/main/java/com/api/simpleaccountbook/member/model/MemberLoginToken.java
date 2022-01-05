@@ -13,7 +13,7 @@ import javax.validation.constraints.NotBlank;
 @Getter @Builder
 public class MemberLoginToken {
 
-    private String message;
+    private String accessToken;
 
-    private String token;
+    private String refreshToken;
 }

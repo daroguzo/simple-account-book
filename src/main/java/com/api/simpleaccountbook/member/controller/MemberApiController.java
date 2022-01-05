@@ -1,21 +1,22 @@
 package com.api.simpleaccountbook.member.controller;
 
-import com.api.simpleaccountbook.member.exception.PasswordNotMatchException;
-import com.api.simpleaccountbook.member.exception.ResponseError;
+import com.api.simpleaccountbook.response.ResponseError;
 import com.api.simpleaccountbook.member.model.MemberInput;
 import com.api.simpleaccountbook.member.model.MemberLogin;
 import com.api.simpleaccountbook.member.model.MemberLoginToken;
 import com.api.simpleaccountbook.member.service.MemberService;
-import com.auth0.jwt.exceptions.SignatureVerificationException;
-import com.auth0.jwt.exceptions.TokenExpiredException;
+import com.api.simpleaccountbook.response.Message;
+import com.api.simpleaccountbook.response.StateEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
@@ -37,7 +38,13 @@ public class MemberApiController {
 
         memberService.register(memberInput);
 
-        return new ResponseEntity<>("사용자가 등록되었습니다.", HttpStatus.OK);
+        Message message = Message.builder()
+                .statusCode(StateEnum.OK.getStatusCode())
+                .code(StateEnum.OK)
+                .message("사용자가 등록되었습니다.")
+                .build();
+
+        return new ResponseEntity<>(message, HttpStatus.OK);
     }
 
     @PostMapping("/login")
@@ -48,7 +55,14 @@ public class MemberApiController {
 
         MemberLoginToken token = memberService.login(memberLogin);
 
-        return ResponseEntity.ok().body(token);
+        Message message = Message.builder()
+                .statusCode(StateEnum.OK.getStatusCode())
+                .code(StateEnum.OK)
+                .message("로그인에 성공하였습니다.")
+                .data(token)
+                .build();
+
+        return new ResponseEntity<>(message, HttpStatus.OK);
     }
 
     // model 안에 에러가 있다면 에러정보 리스트로 반환
@@ -63,29 +77,5 @@ public class MemberApiController {
             return new ResponseEntity<>(responseErrorList, HttpStatus.BAD_REQUEST);
         }
         return null;
-    }
-
-    // 해당되는 사용자가 없는 경우 예외 처리
-    @ExceptionHandler(UsernameNotFoundException.class)
-    public ResponseEntity<?> UsernameNotFoundExceptionHandler(UsernameNotFoundException e) {
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-    }
-
-    // 비밀번호가 일치하지 않는 경우 예외 처리
-    @ExceptionHandler(PasswordNotMatchException.class)
-    public ResponseEntity<?> PasswordNotMatchExceptionHandler(PasswordNotMatchException e) {
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-    }
-
-    // 토큰이 만료된 경우
-    @ExceptionHandler(TokenExpiredException.class)
-    public ResponseEntity<?> TokenExpiredExceptionHandler(PasswordNotMatchException e) {
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-    }
-
-    // 토큰이 잘못된 경우
-    @ExceptionHandler(SignatureVerificationException.class)
-    public ResponseEntity<?> SignatureVerificationExceptionHandler(SignatureVerificationException e) {
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 }

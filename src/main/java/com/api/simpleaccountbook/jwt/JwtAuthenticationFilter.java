@@ -1,6 +1,6 @@
 package com.api.simpleaccountbook.jwt;
 
-import com.api.simpleaccountbook.configuration.MemberPrincipal;
+import com.api.simpleaccountbook.security.MemberPrincipal;
 import com.api.simpleaccountbook.member.model.MemberLogin;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -44,6 +44,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         );
 
         return authenticationManager.authenticate(authenticationToken);
+//        return super.attemptAuthentication(request, response);
     }
 
     @Override
@@ -56,7 +57,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         String token = JWT.create()
                 .withSubject(principal.getUsername())
-                .withExpiresAt(new Date(System.currentTimeMillis() + JwtProperties.EXPIRATION_TIME))
+                .withExpiresAt(new Date(System.currentTimeMillis() + JwtProperties.ACCESS_TOKEN_EXPIRATION_TIME))
                 .sign(Algorithm.HMAC512(JwtProperties.SECRET.getBytes()));
 
         // 응답에 토큰 추가

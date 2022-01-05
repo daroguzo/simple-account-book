@@ -1,4 +1,4 @@
-package com.api.simpleaccountbook.configuration;
+package com.api.simpleaccountbook.security;
 
 import com.api.simpleaccountbook.member.entity.Member;
 import lombok.RequiredArgsConstructor;
@@ -24,12 +24,12 @@ public class MemberPrincipal implements UserDetails {
 
     @Override
     public String getPassword() {
-        return null;
+        return this.member.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return null;
+        return this.member.getEmail();
     }
 
     @Override
@@ -49,6 +49,6 @@ public class MemberPrincipal implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return true;
     }
 }

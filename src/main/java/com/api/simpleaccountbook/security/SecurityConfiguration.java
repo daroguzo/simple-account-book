@@ -1,6 +1,5 @@
-package com.api.simpleaccountbook.configuration;
+package com.api.simpleaccountbook.security;
 
-import com.api.simpleaccountbook.jwt.JwtAuthenticationFilter;
 import com.api.simpleaccountbook.jwt.JwtAuthorizationFilter;
 import com.api.simpleaccountbook.member.repository.MemberRepository;
 import com.api.simpleaccountbook.member.service.MemberService;
@@ -21,13 +20,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final MemberService memberService;
+    private final MemberPrincipalDetailsService memberPrincipalDetailsService;
     private final MemberRepository memberRepository;
-
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
     @Bean
     PasswordEncoder getPasswordEncoder() { return new BCryptPasswordEncoder(); }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+
         http.csrf().disable();
         http.cors().disable();
 
@@ -38,12 +39,16 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-        http.addFilter(new JwtAuthenticationFilter(authenticationManager()))
+        http.exceptionHandling()
+                .authenticationEntryPoint(customAuthenticationEntryPoint);
+        http
+                //.addFilter(new JwtAuthenticationFilter(authenticationManager()))
                 .addFilter(new JwtAuthorizationFilter(authenticationManager(), this.memberRepository));
         http.authorizeRequests()
                     .antMatchers(
                             "/",
-                            "/api/member/**"
+                            "/api/member/**",
+                            "/exception/**"
                     ).permitAll()
                     .and()
                 .authorizeRequests()
@@ -52,6 +57,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                     ).hasAuthority("ROLE_USER")
                     .anyRequest()
                     .authenticated();
+
 
         // form login 설정 해제
         http.formLogin()
@@ -63,7 +69,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(memberService)
+        auth.userDetailsService(memberPrincipalDetailsService)
                 .passwordEncoder(getPasswordEncoder());
     }
 }
