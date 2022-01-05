@@ -3,6 +3,7 @@ package com.api.simpleaccountbook.accountbook.controller;
 import com.api.simpleaccountbook.accountbook.model.AccountBookDetailResponse;
 import com.api.simpleaccountbook.accountbook.model.AccountBookInput;
 import com.api.simpleaccountbook.accountbook.model.AccountBookSimpleResponse;
+import com.api.simpleaccountbook.accountbook.model.ModifyAccountBookInput;
 import com.api.simpleaccountbook.accountbook.service.AccountBookService;
 import com.api.simpleaccountbook.response.ResponseError;
 import com.api.simpleaccountbook.response.Message;
@@ -132,6 +133,26 @@ public class AccountBookApiController {
                 .message(id + "번 가계부는 이미 존재하는 가계부입니다.")
                 .build();
         return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+    }
+
+    @PutMapping("/modify/{id}")
+    public ResponseEntity<?> modifyAccountBook(@RequestBody @Valid ModifyAccountBookInput modifyAccountBookInput,
+            Errors errors,
+            @PathVariable Long id) {
+        ResponseEntity<List<ResponseError>> responseErrorList = getErrorResponseEntityList(errors);
+        if (responseErrorList != null) return responseErrorList;
+
+        String email = getMemberEmail();
+
+        AccountBookDetailResponse response = accountBookService.modifyAccountBook(modifyAccountBookInput, id, email);
+
+        Message message = Message.builder()
+                .statusCode(StateEnum.OK.getStatusCode())
+                .code(StateEnum.OK)
+                .message("수정된 " + id + "번 가계부 세부 내역")
+                .data(response)
+                .build();
+        return new ResponseEntity<>(message, HttpStatus.OK);
     }
 
     /**

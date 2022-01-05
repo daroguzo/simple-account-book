@@ -41,5 +41,5 @@ public interface AccountBookService {
     /**
      * 해당 가계부 수정
      */
-    void modifyAccountBook(ModifyAccountBookInput modifyAccountBookInput, Long accountBookId, String email);
+    AccountBookDetailResponse modifyAccountBook(ModifyAccountBookInput modifyAccountBookInput, Long accountBookId, String email);
 }

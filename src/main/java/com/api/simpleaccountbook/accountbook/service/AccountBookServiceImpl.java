@@ -126,10 +126,21 @@ public class AccountBookServiceImpl implements AccountBookService{
 
     @Transactional
     @Override
-    public void modifyAccountBook(ModifyAccountBookInput modifyAccountBookInput, Long accountBookId, String email) {
+    public AccountBookDetailResponse modifyAccountBook(ModifyAccountBookInput modifyAccountBookInput, Long accountBookId, String email) {
         Member member = getMember(email);
         AccountBook accountBook = getAccountBook(accountBookId, member);
 
+        accountBook.setUsedMoney(modifyAccountBookInput.getUsedMoney());
+        accountBook.setMemo(modifyAccountBookInput.getMemo());
+        accountBookRepository.save(accountBook);
+
+        return AccountBookDetailResponse.builder()
+                .id(accountBook.getId())
+                .subject(accountBook.getSubject())
+                .usedMoney(accountBook.getUsedMoney())
+                .memo(accountBook.getMemo())
+                .regDt(accountBook.getRegDt())
+                .build();
     }
 
     /**
