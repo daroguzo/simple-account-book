@@ -7,22 +7,17 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter @Builder
-public class AccountBookInput {
+@Getter
+@Builder
+public class ModifyAccountBookInput {
 
-    @NotBlank(message = "제목을 입력해주세요.")
-    private String subject;
-
-    @NotNull(message = "사용 금액을 입력해주세요.")
+    @NotNull(message = "수정할 금액을 입력해주세요.")
     private int usedMoney;
 
+    @NotBlank(message = "수정할 메모를 입력해주세요")
     private String memo;
 
-    private LocalDateTime regDt;
-
-    private boolean isDeleted;
 }
