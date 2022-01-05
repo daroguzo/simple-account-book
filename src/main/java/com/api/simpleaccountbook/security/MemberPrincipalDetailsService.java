@@ -1,4 +1,4 @@
-package com.api.simpleaccountbook.configuration;
+package com.api.simpleaccountbook.security;
 
 import com.api.simpleaccountbook.member.entity.Member;
 import com.api.simpleaccountbook.member.repository.MemberRepository;

@@ -1,6 +1,6 @@
 package com.api.simpleaccountbook.jwt;
 
-import com.api.simpleaccountbook.configuration.MemberPrincipal;
+import com.api.simpleaccountbook.security.MemberPrincipal;
 import com.api.simpleaccountbook.member.entity.Member;
 import com.api.simpleaccountbook.member.repository.MemberRepository;
 import com.auth0.jwt.JWT;

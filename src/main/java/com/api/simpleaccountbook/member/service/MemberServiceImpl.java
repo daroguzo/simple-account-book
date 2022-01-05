@@ -1,7 +1,6 @@
 package com.api.simpleaccountbook.member.service;
 
 import com.api.simpleaccountbook.accountbook.util.PasswordUtils;
-import com.api.simpleaccountbook.configuration.MemberPrincipal;
 import com.api.simpleaccountbook.jwt.JwtProperties;
 import com.api.simpleaccountbook.member.entity.Member;
 import com.api.simpleaccountbook.member.exception.PasswordNotMatchException;
@@ -12,14 +11,11 @@ import com.api.simpleaccountbook.member.repository.MemberRepository;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Optional;
 

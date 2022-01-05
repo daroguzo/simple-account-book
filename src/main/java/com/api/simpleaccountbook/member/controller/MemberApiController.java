@@ -39,7 +39,8 @@ public class MemberApiController {
         memberService.register(memberInput);
 
         Message message = Message.builder()
-                .status(StateEnum.OK)
+                .statusCode(StateEnum.OK.getStatusCode())
+                .code(StateEnum.OK)
                 .message("사용자가 등록되었습니다.")
                 .build();
 
@@ -55,7 +56,8 @@ public class MemberApiController {
         MemberLoginToken token = memberService.login(memberLogin);
 
         Message message = Message.builder()
-                .status(StateEnum.OK)
+                .statusCode(StateEnum.OK.getStatusCode())
+                .code(StateEnum.OK)
                 .message("로그인에 성공하였습니다.")
                 .data(token)
                 .build();

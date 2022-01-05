@@ -6,7 +6,8 @@ import lombok.Getter;
 @Getter @Builder
 public class Message {
 
-    private StateEnum status;
+    private int statusCode;
+    private StateEnum code;
     private String message;
     private Object data;
 

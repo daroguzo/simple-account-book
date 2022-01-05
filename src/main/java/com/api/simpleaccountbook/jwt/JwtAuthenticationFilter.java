@@ -1,6 +1,6 @@
 package com.api.simpleaccountbook.jwt;
 
-import com.api.simpleaccountbook.configuration.MemberPrincipal;
+import com.api.simpleaccountbook.security.MemberPrincipal;
 import com.api.simpleaccountbook.member.model.MemberLogin;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -10,7 +10,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.servlet.FilterChain;
