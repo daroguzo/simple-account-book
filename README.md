@@ -1,4 +1,4 @@
-# simple-account-book   REST API 기반 간단한 가계부
+# simple-account-book   (REST API 기반 간단한 가계부)
 ---
 ### 목적 및 용도   
 사용자의 소비내역을 기록/관리하는 가계부
