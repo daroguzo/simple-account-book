@@ -67,11 +67,11 @@ public class AccountBookApiController {
         accountBookService.postAccountBook(accountBookInput, email);
 
         Message message = Message.builder()
-                .statusCode(StateEnum.OK.getStatusCode())
-                .code(StateEnum.OK)
+                .statusCode(StateEnum.CREATED.getStatusCode())
+                .code(StateEnum.CREATED)
                 .message("새로운 가계부가 등록되었습니다.")
                 .build();
-        return new ResponseEntity<>(message, HttpStatus.OK);
+        return new ResponseEntity<>(message, HttpStatus.CREATED);
     }
 
     @GetMapping("/detail/{id}")

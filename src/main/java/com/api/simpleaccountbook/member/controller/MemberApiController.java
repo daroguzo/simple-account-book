@@ -39,12 +39,12 @@ public class MemberApiController {
         memberService.register(memberInput);
 
         Message message = Message.builder()
-                .statusCode(StateEnum.OK.getStatusCode())
-                .code(StateEnum.OK)
+                .statusCode(StateEnum.CREATED.getStatusCode())
+                .code(StateEnum.CREATED)
                 .message("사용자가 등록되었습니다.")
                 .build();
 
-        return new ResponseEntity<>(message, HttpStatus.OK);
+        return new ResponseEntity<>(message, HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
