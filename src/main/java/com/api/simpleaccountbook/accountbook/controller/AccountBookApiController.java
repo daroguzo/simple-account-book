@@ -29,7 +29,7 @@ public class AccountBookApiController {
 
     private final AccountBookService accountBookService;
 
-    @GetMapping("/list")
+    @GetMapping("/")
     public ResponseEntity<?> getList() {
         String email = getMemberEmail();
         List<AccountBookSimpleResponse> accountBookList = accountBookService.getAccountBookList(email);
@@ -57,7 +57,7 @@ public class AccountBookApiController {
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
 
-    @PostMapping("/post")
+    @PostMapping("/")
     public ResponseEntity<?> postAccountBook(@RequestBody @Valid AccountBookInput accountBookInput,
                                              Errors errors) {
         ResponseEntity<?> responseErrorList = getErrorResponseEntityList(errors);
@@ -74,7 +74,7 @@ public class AccountBookApiController {
         return new ResponseEntity<>(message, HttpStatus.CREATED);
     }
 
-    @GetMapping("/detail/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<?> getDetail(@PathVariable Long id) {
 
         String email = getMemberEmail();
@@ -89,7 +89,7 @@ public class AccountBookApiController {
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
 
-    @PutMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteAccountBook(@PathVariable Long id) {
 
         String email = getMemberEmail();
@@ -135,7 +135,7 @@ public class AccountBookApiController {
         return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
     }
 
-    @PutMapping("/modify/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<?> modifyAccountBook(@RequestBody @Valid ModifyAccountBookInput modifyAccountBookInput,
             Errors errors,
             @PathVariable Long id) {
