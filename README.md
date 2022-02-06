@@ -87,7 +87,7 @@
 }
 ```
 #### account book(가계부)   
-  - 간단한 가계부 목록 GET /api/account-book/list
+  - 간단한 가계부 목록 GET /api/account-book/
 ```json
 {
     "statusCode": 200,
@@ -122,7 +122,7 @@
     ]
 }
 ```
-  - 가계부 작성 POST /api/account-book/post
+  - 가계부 작성 POST /api/account-book
     1. subject: 가계부 제목, 필수 입력
     2. usedMoney: 사용한 금액, 정수형, 필수 입력
     3. memo: 상세
@@ -142,7 +142,7 @@
 ```
     Exception: 400(해당되는 가계부가 없는 경우), 401(타인의 가계부에 접근하는 경우)
 ```
-  - 가계부 상세 GET /api/account-book/detail/{id}
+  - 가계부 상세 GET /api/account-book/{id}
 ```json
 {
     "statusCode": 200,
@@ -157,7 +157,7 @@
     }
 }
 ```
-  - 가계부 수정 PUT /api/account-book/modify/{id}
+  - 가계부 수정 PUT /api/account-book/{id}
 ```json
 {
     "statusCode": 200,
@@ -173,7 +173,7 @@
 }
 ```
     Exception: 400(usedMoney, memo 필수 입력)
-  - 가계부 삭제 PUT /api/account-book/delete/{id}
+  - 가계부 삭제 DELETE /api/account-book/{id}
 ```json
 {
     "statusCode": 200,
