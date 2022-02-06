@@ -7,6 +7,7 @@ import lombok.Getter;
 @Getter
 public enum StateEnum {
     OK(200, "OK"),
+    CREATED(201, "CREATED"),
     BAD_REQUEST(400, "BAD_REQUEST"),
     UNAUTHORIZED(401, "UNAUTHORIZED"),
     FORBIDDEN(403, "FORBIDDEN"),

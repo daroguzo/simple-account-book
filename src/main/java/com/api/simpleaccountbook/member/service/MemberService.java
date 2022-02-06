@@ -15,7 +15,6 @@ public interface MemberService {
 
     /**
      * 로그인
-     * @return
      */
     MemberLoginToken login(MemberLogin memberLogin);
 }

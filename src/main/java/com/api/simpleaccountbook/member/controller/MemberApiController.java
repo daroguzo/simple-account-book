@@ -33,24 +33,24 @@ public class MemberApiController {
     public ResponseEntity<?> register(@RequestBody @Valid MemberInput memberInput,
                                       Errors errors) {
 
-        ResponseEntity<List<ResponseError>> responseErrorList = getErrorResponseEntityList(errors);
+        ResponseEntity<?> responseErrorList = getErrorResponseEntityList(errors);
         if (responseErrorList != null) return responseErrorList;
 
         memberService.register(memberInput);
 
         Message message = Message.builder()
-                .statusCode(StateEnum.OK.getStatusCode())
-                .code(StateEnum.OK)
+                .statusCode(StateEnum.CREATED.getStatusCode())
+                .code(StateEnum.CREATED)
                 .message("사용자가 등록되었습니다.")
                 .build();
 
-        return new ResponseEntity<>(message, HttpStatus.OK);
+        return new ResponseEntity<>(message, HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody @Valid MemberLogin memberLogin,
                                    Errors errors) {
-        ResponseEntity<List<ResponseError>> responseErrorList = getErrorResponseEntityList(errors);
+        ResponseEntity<?> responseErrorList = getErrorResponseEntityList(errors);
         if (responseErrorList != null) return responseErrorList;
 
         MemberLoginToken token = memberService.login(memberLogin);
@@ -66,7 +66,7 @@ public class MemberApiController {
     }
 
     // model 안에 에러가 있다면 에러정보 리스트로 반환
-    private ResponseEntity<List<ResponseError>> getErrorResponseEntityList(Errors errors) {
+    private ResponseEntity<?> getErrorResponseEntityList(Errors errors) {
         List<ResponseError> responseErrorList = new ArrayList<>();
 
         if (errors.hasErrors()) {
@@ -74,7 +74,13 @@ public class MemberApiController {
                 responseErrorList.add(ResponseError.of((FieldError) e));
             });
 
-            return new ResponseEntity<>(responseErrorList, HttpStatus.BAD_REQUEST);
+            Message message = Message.builder()
+                    .statusCode(StateEnum.BAD_REQUEST.getStatusCode())
+                    .code(StateEnum.BAD_REQUEST)
+                    .message("잘못된 요청이 포함되어있습니다.")
+                    .data(responseErrorList)
+                    .build();
+            return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
         }
         return null;
     }

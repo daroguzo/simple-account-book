@@ -29,7 +29,7 @@ public class AccountBookApiController {
 
     private final AccountBookService accountBookService;
 
-    @GetMapping("/list")
+    @GetMapping("/")
     public ResponseEntity<?> getList() {
         String email = getMemberEmail();
         List<AccountBookSimpleResponse> accountBookList = accountBookService.getAccountBookList(email);
@@ -57,24 +57,24 @@ public class AccountBookApiController {
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
 
-    @PostMapping("/post")
+    @PostMapping("/")
     public ResponseEntity<?> postAccountBook(@RequestBody @Valid AccountBookInput accountBookInput,
                                              Errors errors) {
-        ResponseEntity<List<ResponseError>> responseErrorList = getErrorResponseEntityList(errors);
+        ResponseEntity<?> responseErrorList = getErrorResponseEntityList(errors);
         if (responseErrorList != null) return responseErrorList;
 
         String email = getMemberEmail();
         accountBookService.postAccountBook(accountBookInput, email);
 
         Message message = Message.builder()
-                .statusCode(StateEnum.OK.getStatusCode())
-                .code(StateEnum.OK)
+                .statusCode(StateEnum.CREATED.getStatusCode())
+                .code(StateEnum.CREATED)
                 .message("새로운 가계부가 등록되었습니다.")
                 .build();
-        return new ResponseEntity<>(message, HttpStatus.OK);
+        return new ResponseEntity<>(message, HttpStatus.CREATED);
     }
 
-    @GetMapping("/detail/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<?> getDetail(@PathVariable Long id) {
 
         String email = getMemberEmail();
@@ -89,7 +89,7 @@ public class AccountBookApiController {
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
 
-    @PutMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteAccountBook(@PathVariable Long id) {
 
         String email = getMemberEmail();
@@ -135,11 +135,11 @@ public class AccountBookApiController {
         return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
     }
 
-    @PutMapping("/modify/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<?> modifyAccountBook(@RequestBody @Valid ModifyAccountBookInput modifyAccountBookInput,
             Errors errors,
             @PathVariable Long id) {
-        ResponseEntity<List<ResponseError>> responseErrorList = getErrorResponseEntityList(errors);
+        ResponseEntity<?> responseErrorList = getErrorResponseEntityList(errors);
         if (responseErrorList != null) return responseErrorList;
 
         String email = getMemberEmail();
@@ -158,7 +158,7 @@ public class AccountBookApiController {
     /**
      * model 안에 에러가 있다면 에러정보 리스트로 반환
       */
-    private ResponseEntity<List<ResponseError>> getErrorResponseEntityList(Errors errors) {
+    private ResponseEntity<?> getErrorResponseEntityList(Errors errors) {
         List<ResponseError> responseErrorList = new ArrayList<>();
 
         if (errors.hasErrors()) {
@@ -166,7 +166,13 @@ public class AccountBookApiController {
                 responseErrorList.add(ResponseError.of((FieldError) e));
             });
 
-            return new ResponseEntity<>(responseErrorList, HttpStatus.BAD_REQUEST);
+            Message message = Message.builder()
+                    .statusCode(StateEnum.BAD_REQUEST.getStatusCode())
+                    .code(StateEnum.BAD_REQUEST)
+                    .message("잘못된 요청이 포함되어있습니다.")
+                    .data(responseErrorList)
+                    .build();
+            return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
         }
         return null;
     }
